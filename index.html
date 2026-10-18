@@ -1,0 +1,1217 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Layanan Digital — Aldi Grup</title>
+<style>
+  :root {
+    --navy:#0f2a4a; --navy-light:#1b3f6b; --gold:#c9a24b; --gold-light:#e2c47a;
+    --bg:#f4f6fa; --text:#1a2233; --muted:#6b7789; --border:#dfe5ee;
+    --joki:#6c5ce7; --comes:#00b894; --novazz:#e17055; --porto:#0984e3;
+    --lite:#0984e3; --lite-light:#74b9ff;
+    --pro:#e17055; --pro-light:#fab1a0;
+    --wa:#25D366; --green:#1e8e5a; --red:#d93025;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:'Segoe UI',Tahoma,sans-serif; background:var(--bg); color:var(--text); line-height:1.6; }
+
+  /* ===== TOPBAR ===== */
+  .topbar { background:var(--navy); color:#cfd8e3; font-size:0.78rem; padding:8px 0; }
+  .topbar .wrap { max-width:1100px; margin:0 auto; padding:0 24px; display:flex; justify-content:space-between; flex-wrap:wrap; gap:8px; }
+  .topbar a { color:var(--gold-light); text-decoration:none; }
+
+  /* ===== NAVBAR ===== */
+  .navbar { background:white; border-bottom:1px solid var(--border); position:sticky; top:0; z-index:50; }
+  .navbar .wrap { max-width:1100px; margin:0 auto; padding:14px 24px; display:flex; align-items:center; justify-content:space-between; gap:16px; }
+  .brand { display:flex; align-items:center; gap:12px; text-decoration:none; }
+  .brand-logo { width:44px; height:44px; border-radius:10px; background:linear-gradient(135deg,var(--navy),var(--navy-light)); color:var(--gold); display:flex; align-items:center; justify-content:center; font-weight:800; font-size:1.2rem; }
+  .brand-text h1 { font-size:1.05rem; color:var(--navy); line-height:1.1; }
+  .brand-text span { font-size:0.72rem; color:var(--muted); letter-spacing:1.5px; text-transform:uppercase; }
+  .nav-links { display:flex; gap:22px; font-size:0.88rem; }
+  .nav-links a { color:var(--navy); text-decoration:none; font-weight:500; }
+  .nav-links a:hover, .nav-links a.active { color:var(--gold); }
+
+  .member-badge {
+    display:none; align-items:center; gap:6px;
+    background:linear-gradient(135deg,var(--gold),var(--gold-light));
+    color:var(--navy); font-size:0.72rem; font-weight:800;
+    padding:5px 12px; border-radius:20px; cursor:pointer;
+  }
+  .member-badge.show { display:inline-flex; }
+  .member-badge .dot-live { width:7px; height:7px; border-radius:50%; background:#1e8e5a; animation:pulse 1.2s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1;} 50%{opacity:0.4;} }
+
+  /* ===== HERO ===== */
+  .hero {
+    background:linear-gradient(135deg,rgba(15,42,74,0.96),rgba(27,63,107,0.92)),
+      repeating-linear-gradient(45deg,#122e50 0 12px,#15334f 12px 24px);
+    color:white; padding:56px 24px 66px; text-align:center;
+  }
+  .hero .wrap { max-width:760px; margin:0 auto; }
+  .hero .badge {
+    display:inline-block; background:rgba(201,162,75,0.18); color:var(--gold-light);
+    border:1px solid rgba(201,162,75,0.4); padding:6px 14px; border-radius:30px;
+    font-size:0.72rem; letter-spacing:1px; text-transform:uppercase; margin-bottom:16px;
+  }
+  .hero h2 { font-size:2.2rem; margin-bottom:12px; line-height:1.2; }
+  .hero h2 span { color:var(--gold); }
+  .hero p { color:#c8d4e4; font-size:0.95rem; }
+
+  /* ===== SECTION ===== */
+  section.pad { padding:56px 24px; }
+  .wrap-narrow { max-width:1100px; margin:0 auto; }
+  .section-title { text-align:center; margin-bottom:38px; }
+  .section-title h3 { font-size:1.5rem; color:var(--navy); margin-bottom:8px; }
+  .section-title p { color:var(--muted); font-size:0.9rem; }
+
+  /* ===== GRID LAYANAN ===== */
+  .services-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:24px; }
+  .service-card {
+    background:white; border:1px solid var(--border); border-radius:18px;
+    padding:0; display:flex; flex-direction:column;
+    transition:transform 0.2s, box-shadow 0.2s; position:relative; overflow:hidden;
+  }
+  .service-card::before { content:''; position:absolute; top:0; left:0; right:0; height:5px; z-index:2; }
+  .service-card.joki::before { background:linear-gradient(90deg,var(--joki),#a29bfe); }
+  .service-card.comes::before { background:linear-gradient(90deg,var(--comes),#55efc4); }
+  .service-card.novazz::before { background:linear-gradient(90deg,var(--novazz),#fab1a0); }
+  .service-card.porto::before { background:linear-gradient(90deg,var(--porto),#74b9ff); }
+  .service-card:hover { transform:translateY(-5px); box-shadow:0 18px 40px rgba(15,42,74,0.12); }
+
+  .service-img { width:100%; height:180px; object-fit:cover; display:block; background:#f0f3f8; border-bottom:1px solid var(--border); }
+  .service-img-fallback { width:100%; height:180px; display:flex; align-items:center; justify-content:center; font-size:3rem; border-bottom:1px solid var(--border); }
+  .joki .service-img-fallback { background:linear-gradient(135deg,rgba(108,92,231,0.15),rgba(162,155,254,0.2)); }
+  .comes .service-img-fallback { background:linear-gradient(135deg,rgba(0,184,148,0.15),rgba(85,239,196,0.2)); }
+  .novazz .service-img-fallback { background:linear-gradient(135deg,rgba(225,112,85,0.15),rgba(250,177,160,0.2)); }
+  .porto .service-img-fallback { background:linear-gradient(135deg,rgba(9,132,227,0.15),rgba(116,185,255,0.2)); }
+
+  .service-body { padding:26px 26px 28px; display:flex; flex-direction:column; flex:1; }
+  .service-head { display:flex; align-items:center; gap:14px; margin-bottom:14px; }
+  .service-head h4 { font-size:1.15rem; color:var(--navy); line-height:1.2; }
+  .service-head .tag { display:inline-block; font-size:0.65rem; font-weight:700; padding:2px 9px; border-radius:20px; margin-top:4px; text-transform:uppercase; letter-spacing:0.5px; }
+  .service-card.joki .tag { background:rgba(108,92,231,0.12); color:var(--joki); }
+  .service-card.comes .tag { background:rgba(0,184,148,0.12); color:var(--comes); }
+  .service-card.novazz .tag { background:rgba(225,112,85,0.12); color:var(--novazz); }
+  .service-card.porto .tag { background:rgba(9,132,227,0.12); color:var(--porto); }
+  .service-card p.desc { font-size:0.88rem; color:var(--muted); flex:1; margin-bottom:16px; }
+  .service-meta { font-size:0.78rem; color:var(--muted); margin-bottom:18px; display:flex; gap:14px; flex-wrap:wrap; }
+  .service-meta span { display:inline-flex; align-items:center; gap:4px; }
+  .btn-service { display:inline-flex; align-items:center; justify-content:center; gap:8px; width:100%; padding:13px; border-radius:10px; font-weight:700; font-size:0.9rem; text-decoration:none; color:white; transition:transform 0.15s, box-shadow 0.2s; }
+  .service-card.joki .btn-service { background:linear-gradient(135deg,var(--joki),#a29bfe); }
+  .service-card.comes .btn-service { background:linear-gradient(135deg,var(--comes),#55efc4); }
+  .service-card.novazz .btn-service { background:linear-gradient(135deg,var(--novazz),#fab1a0); }
+  .service-card.porto .btn-service { background:linear-gradient(135deg,var(--porto),#74b9ff); }
+  .btn-service:hover { transform:translateY(-2px); box-shadow:0 10px 22px rgba(0,0,0,0.15); }
+
+  /* ===== INFO BOX DI KARTU LAYANAN (DP & Fitur) ===== */
+  .service-info-box {
+    background: #f8fafd;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 12px 14px;
+    margin-bottom: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .sib-row { display: flex; align-items: flex-start; gap: 10px; }
+  .sib-row .sib-icon { font-size: 1.1rem; flex-shrink: 0; line-height: 1.2; }
+  .sib-row .sib-title { font-size: 0.8rem; font-weight: 700; color: var(--navy); margin-bottom: 1px; }
+  .sib-row .sib-desc { font-size: 0.74rem; color: var(--muted); line-height: 1.35; }
+  .sib-row .sib-desc strong { color: var(--navy); }
+
+  /* ===== TOMBOL PREMIUM ===== */
+  .premium-cta { text-align:center; margin-top:44px; }
+  .btn-premium {
+    display:inline-flex; align-items:center; gap:10px;
+    padding:14px 30px; border-radius:50px; border:none;
+    background:linear-gradient(135deg,var(--gold),var(--gold-light));
+    color:var(--navy); font-weight:800; font-size:0.95rem;
+    cursor:pointer; font-family:inherit;
+    box-shadow:0 8px 22px rgba(201,162,75,0.4);
+    transition:transform 0.15s, box-shadow 0.2s;
+  }
+  .btn-premium:hover { transform:translateY(-2px); box-shadow:0 12px 28px rgba(201,162,75,0.55); }
+  .premium-cta p { font-size:0.8rem; color:var(--muted); margin-top:10px; }
+
+  /* ===== SECTION FOUNDER ===== */
+  .founder-section { background:white; border-top:1px solid var(--border); border-bottom:1px solid var(--border); }
+  .founder-wrap { display:grid; grid-template-columns:280px 1fr; gap:40px; align-items:center; }
+  .founder-photo { width:100%; aspect-ratio:1/1; border-radius:20px; object-fit:cover; border:4px solid var(--gold); box-shadow:0 16px 36px rgba(15,42,74,0.18); background:#f0f3f8; display:block; }
+  .founder-fallback { width:100%; aspect-ratio:1/1; border-radius:20px; display:flex; align-items:center; justify-content:center; background:linear-gradient(135deg,var(--navy),var(--navy-light)); color:var(--gold); font-size:4rem; font-weight:800; border:4px solid var(--gold); box-shadow:0 16px 36px rgba(15,42,74,0.18); }
+  .founder-info .badge-sm { display:inline-block; background:rgba(201,162,75,0.15); color:var(--gold); padding:4px 12px; border-radius:20px; font-size:0.7rem; font-weight:700; letter-spacing:1px; text-transform:uppercase; margin-bottom:12px; }
+  .founder-info h3 { font-size:1.6rem; color:var(--navy); margin-bottom:6px; }
+  .founder-info .role { color:var(--gold); font-weight:600; font-size:0.9rem; margin-bottom:16px; }
+  .founder-info p { color:var(--muted); font-size:0.9rem; margin-bottom:14px; }
+  .founder-quote { border-left:4px solid var(--gold); padding:12px 18px; background:#fbf7ed; border-radius:0 10px 10px 0; font-style:italic; color:var(--navy); font-size:0.88rem; margin-bottom:18px; }
+  .founder-links { display:flex; gap:10px; flex-wrap:wrap; }
+  .founder-links a { display:inline-flex; align-items:center; gap:6px; padding:9px 16px; border-radius:8px; font-size:0.82rem; font-weight:600; text-decoration:none; background:var(--navy); color:white; transition:background 0.2s; }
+  .founder-links a:hover { background:var(--navy-light); }
+  .founder-links a.outline { background:white; color:var(--navy); border:1px solid var(--border); }
+  .founder-links a.outline:hover { border-color:var(--gold); color:var(--gold); }
+
+  /* ===== KEUNGGULAN ===== */
+  .benefits { background:white; border-top:1px solid var(--border); border-bottom:1px solid var(--border); }
+  .benefits-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:24px; }
+  .benefit { text-align:center; }
+  .benefit .num { font-size:1.9rem; font-weight:800; color:var(--navy); background:linear-gradient(135deg,var(--navy),var(--navy-light)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+  .benefit h5 { font-size:0.88rem; color:var(--navy); margin-top:4px; }
+  .benefit p { font-size:0.76rem; color:var(--muted); }
+
+  /* ===== CTA ===== */
+  .cta-box { background:linear-gradient(135deg,var(--navy),var(--navy-light)); color:white; border-radius:18px; padding:44px 32px; display:flex; align-items:center; justify-content:space-between; gap:24px; flex-wrap:wrap; }
+  .cta-box h3 { font-size:1.4rem; margin-bottom:6px; }
+  .cta-box p { color:#c8d4e4; font-size:0.88rem; }
+  .btn-gold { display:inline-flex; align-items:center; gap:8px; background:linear-gradient(135deg,var(--gold),var(--gold-light)); color:var(--navy); padding:14px 26px; border-radius:10px; font-weight:700; font-size:0.9rem; text-decoration:none; box-shadow:0 8px 20px rgba(201,162,75,0.4); transition:transform 0.15s; }
+  .btn-gold:hover { transform:translateY(-2px); }
+
+  /* ===== FOOTER ===== */
+  footer { background:var(--navy); color:#8fa3bd; padding:34px 24px 24px; font-size:0.82rem; }
+  .footer-wrap { max-width:1100px; margin:0 auto; display:grid; grid-template-columns:2fr 1fr 1fr; gap:30px; }
+  .footer-brand h4 { color:white; font-size:1.05rem; margin-bottom:8px; }
+  .footer-brand p { line-height:1.6; }
+  .footer-col h5 { color:var(--gold-light); font-size:0.8rem; text-transform:uppercase; letter-spacing:1px; margin-bottom:12px; }
+  .footer-col a { display:block; color:#8fa3bd; text-decoration:none; padding:4px 0; }
+  .footer-col a:hover { color:var(--gold-light); }
+  .footer-bottom { max-width:1100px; margin:24px auto 0; padding-top:18px; border-top:1px solid rgba(255,255,255,0.1); text-align:center; font-size:0.75rem; }
+
+  /* ============================================================
+     MODAL PREMIUM (3 TAHAP)
+  ============================================================ */
+  .modal-overlay {
+    display:none; position:fixed; inset:0; z-index:100;
+    background:rgba(10,25,45,0.72); backdrop-filter:blur(4px);
+    align-items:center; justify-content:center; padding:20px;
+    animation:fadeIn 0.25s ease;
+  }
+  .modal-overlay.show { display:flex; }
+  @keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
+  @keyframes slideUp { from { opacity:0; transform:translateY(30px) scale(0.96); } to { opacity:1; transform:translateY(0) scale(1); } }
+
+  .modal-box {
+    background:white; border-radius:20px; max-width:440px; width:100%;
+    max-height:92vh; overflow-y:auto;
+    box-shadow:0 30px 70px rgba(0,0,0,0.35);
+    animation:slideUp 0.3s ease;
+  }
+  .modal-head {
+    background:linear-gradient(135deg,var(--navy),var(--navy-light));
+    color:white; padding:18px 22px; display:flex; align-items:center; justify-content:space-between;
+    position:sticky; top:0; z-index:5;
+  }
+  .modal-head h4 { font-size:1.02rem; }
+  .modal-head .sub { font-size:0.74rem; color:#c8d4e4; margin-top:2px; }
+  .modal-close {
+    background:rgba(255,255,255,0.15); border:none; color:white;
+    width:32px; height:32px; border-radius:50%; cursor:pointer;
+    font-size:1.1rem; display:flex; align-items:center; justify-content:center;
+    transition:background 0.2s; flex-shrink:0;
+  }
+  .modal-close:hover { background:rgba(255,255,255,0.3); }
+
+  .modal-body { padding:22px; }
+  .stage { display:none; }
+  .stage.show { display:block; }
+
+  /* Step indicator */
+  .step-indicator {
+    display:flex; align-items:center; justify-content:center; gap:6px;
+    margin-bottom:18px; font-size:0.65rem; color:var(--muted);
+    font-weight:700; text-transform:uppercase; letter-spacing:0.5px;
+  }
+  .step-dot { display:flex; align-items:center; gap:6px; }
+  .step-dot .num {
+    width:22px; height:22px; border-radius:50%;
+    background:#e8edf4; color:var(--muted);
+    display:inline-flex; align-items:center; justify-content:center;
+    font-size:0.7rem; font-weight:800;
+  }
+  .step-dot.active .num { background:linear-gradient(135deg,var(--gold),var(--gold-light)); color:var(--navy); }
+  .step-dot.done .num { background:var(--green); color:white; }
+  .step-dot.active { color:var(--navy); }
+  .step-line { width:14px; height:2px; background:#e8edf4; border-radius:2px; }
+
+  /* Info manfaat premium */
+  .premium-benefits {
+    background:#fbfcfe; border:1px solid var(--border); border-radius:12px;
+    padding:14px 16px; margin-bottom:16px;
+  }
+  .premium-benefits .pb-title {
+    font-size:0.72rem; font-weight:800; color:var(--navy);
+    text-transform:uppercase; letter-spacing:0.5px; margin-bottom:8px;
+  }
+  .premium-benefits ul { list-style:none; display:flex; flex-direction:column; gap:6px; }
+  .premium-benefits li { font-size:0.82rem; color:var(--text); display:flex; align-items:center; gap:8px; }
+  .premium-benefits li .chk { color:var(--green); font-weight:800; }
+
+  /* Pilih paket */
+  .plan-option {
+    display:flex; align-items:center; gap:14px;
+    border:2px solid var(--border); border-radius:14px;
+    padding:16px; margin-bottom:12px; cursor:pointer;
+    transition:all 0.18s; background:white; width:100%;
+    text-align:left; font-family:inherit;
+  }
+  .plan-option:hover { border-color:var(--gold); background:#fffdf7; }
+  .plan-option.lite:hover { border-color:var(--lite); background:#f3f9ff; }
+  .plan-option.pro:hover { border-color:var(--pro); background:#fff6f3; }
+  .plan-option .po-icon { width:48px; height:48px; border-radius:12px; flex-shrink:0; display:flex; align-items:center; justify-content:center; font-size:1.4rem; }
+  .plan-option.lite .po-icon { background:rgba(9,132,227,0.12); }
+  .plan-option.pro .po-icon { background:rgba(225,112,85,0.12); }
+  .plan-option .po-body { flex:1; }
+  .plan-option .po-body h5 { font-size:0.95rem; color:var(--navy); display:flex; align-items:center; gap:8px; }
+  .plan-option .po-body h5 .lbl { font-size:0.6rem; font-weight:800; padding:2px 8px; border-radius:20px; text-transform:uppercase; letter-spacing:0.5px; }
+  .plan-option.pro .po-body h5 .lbl { background:linear-gradient(135deg,var(--gold),var(--gold-light)); color:var(--navy); }
+  .plan-option .po-body p { font-size:0.76rem; color:var(--muted); margin-top:2px; }
+  .plan-option .po-price { text-align:right; flex-shrink:0; }
+  .plan-option .po-price .p { font-size:1.05rem; font-weight:800; line-height:1; color:var(--navy); }
+  .plan-option.lite .po-price .p { color:var(--lite); }
+  .plan-option.pro .po-price .p { color:var(--pro); }
+  .plan-option .po-price .m { font-size:0.65rem; color:var(--muted); }
+
+  .btn-back { background:none; border:none; color:var(--muted); font-size:0.8rem; font-weight:600; cursor:pointer; padding:0 0 12px; font-family:inherit; display:inline-flex; align-items:center; gap:5px; }
+  .btn-back:hover { color:var(--navy); }
+
+  /* Bayar */
+  .bill-box { background:#f8fafd; border:1px dashed var(--border); border-radius:12px; padding:13px 16px; margin-bottom:16px; }
+  .bill-row { display:flex; justify-content:space-between; font-size:0.84rem; padding:3px 0; }
+  .bill-row.total { border-top:1px solid var(--border); margin-top:8px; padding-top:9px; font-size:0.98rem; font-weight:800; color:var(--navy); }
+  .bill-row span:first-child { color:var(--muted); }
+  .bill-row.total span:first-child { color:var(--navy); }
+
+  .scan-caption { text-align:center; font-size:0.78rem; color:var(--muted); margin-bottom:6px; font-weight:600; }
+  .scan-caption .dot { display:inline-block; width:8px; height:8px; border-radius:50%; background:#00e676; margin-right:6px; animation:pulse 1.2s infinite; }
+
+  .scan-area { position:relative; width:100%; aspect-ratio:1/1; max-width:260px; margin:0 auto 14px; border-radius:16px; overflow:hidden; background:#eef2f7; border:2px solid var(--border); }
+  .scan-img { width:100%; height:100%; object-fit:contain; display:block; background:white; }
+  .scan-fallback { width:100%; height:100%; display:none; align-items:center; justify-content:center; flex-direction:column; gap:8px; text-align:center; padding:20px; background:repeating-linear-gradient(45deg,#f0f3f8 0 10px,#e8edf4 10px 20px); }
+  .scan-fallback .qr-emoji { font-size:3rem; }
+  .scan-fallback span { font-size:0.75rem; color:var(--muted); font-weight:600; }
+  .scan-line { position:absolute; left:0; right:0; height:3px; background:linear-gradient(90deg,transparent,#00e676,#00e676,transparent); box-shadow:0 0 14px 3px rgba(0,230,118,0.7); animation:scanMove 2.2s ease-in-out infinite; z-index:2; }
+  @keyframes scanMove { 0%{top:6%;opacity:0.9;} 50%{top:92%;opacity:1;} 100%{top:6%;opacity:0.9;} }
+  .scan-corner { position:absolute; width:20px; height:20px; border:3px solid #00e676; z-index:3; }
+  .scan-corner.tl { top:8px; left:8px; border-right:none; border-bottom:none; border-radius:6px 0 0 0; }
+  .scan-corner.tr { top:8px; right:8px; border-left:none; border-bottom:none; border-radius:0 6px 0 0; }
+  .scan-corner.bl { bottom:8px; left:8px; border-right:none; border-top:none; border-radius:0 0 0 6px; }
+  .scan-corner.br { bottom:8px; right:8px; border-left:none; border-top:none; border-radius:0 0 6px 0; }
+
+  .pay-steps-info {
+    background:#e8f4ff; border:1px solid #b3d9ff; border-radius:10px;
+    padding:11px 14px; font-size:0.78rem; color:#0d47a1; margin-bottom:14px;
+    line-height:1.5;
+  }
+  .pay-steps-info strong { color:#083b8a; }
+
+  .btn-confirm-code {
+    display:inline-flex; align-items:center; justify-content:center; gap:8px;
+    width:100%; padding:14px; border-radius:11px; border:none;
+    background:linear-gradient(135deg,var(--wa),#1eb955); color:white;
+    font-weight:700; font-size:0.92rem; cursor:pointer;
+    text-decoration:none; font-family:inherit;
+    transition:transform 0.15s, box-shadow 0.2s; margin-bottom:10px;
+  }
+  .btn-confirm-code:hover { transform:translateY(-2px); box-shadow:0 10px 22px rgba(37,211,102,0.35); }
+  .btn-confirm-code svg { width:18px; height:18px; fill:white; }
+
+  /* Kode aktivasi */
+  .code-intro { text-align:center; margin-bottom:18px; }
+  .code-intro .lock-icon { width:56px; height:56px; border-radius:50%; background:rgba(201,162,75,0.15); color:var(--gold); display:flex; align-items:center; justify-content:center; font-size:1.6rem; margin:0 auto 10px; }
+  .code-intro h5 { font-size:1rem; color:var(--navy); margin-bottom:4px; }
+  .code-intro p { font-size:0.8rem; color:var(--muted); }
+
+  .code-field { margin-bottom:14px; }
+  .code-field label { display:block; font-size:0.78rem; font-weight:600; color:var(--navy); margin-bottom:6px; }
+  .code-field input {
+    width:100%; padding:14px 16px; border:2px solid var(--border);
+    border-radius:11px; font-size:1.05rem; font-family:'Courier New',monospace;
+    font-weight:700; letter-spacing:1.5px; text-align:center;
+    color:var(--navy); background:#fbfcfe;
+    transition:border 0.2s, box-shadow 0.2s;
+  }
+  .code-field input:focus { outline:none; border-color:var(--gold); box-shadow:0 0 0 3px rgba(201,162,75,0.18); background:white; }
+  .code-field input.invalid { border-color:var(--red); background:#fef4f3; }
+  .code-msg { font-size:0.78rem; padding:10px 14px; border-radius:9px; margin-bottom:14px; display:none; }
+  .code-msg.show { display:block; }
+  .code-msg.error { background:#fef4f3; border:1px solid #f5c2bf; color:var(--red); }
+  .code-msg.success { background:#e6f6ee; border:1px solid #b7e4cb; color:#1e6e45; }
+
+  .btn-verify { display:inline-flex; align-items:center; justify-content:center; gap:8px; width:100%; padding:14px; border-radius:11px; border:none; background:linear-gradient(135deg,var(--navy),var(--navy-light)); color:white; font-weight:700; font-size:0.92rem; cursor:pointer; font-family:inherit; transition:transform 0.15s, box-shadow 0.2s; margin-bottom:12px; }
+  .btn-verify:hover { transform:translateY(-2px); box-shadow:0 10px 22px rgba(15,42,74,0.3); }
+
+  .btn-request-code {
+    display:inline-flex; align-items:center; justify-content:center; gap:8px;
+    width:100%; padding:12px; border-radius:11px; border:2px dashed var(--wa);
+    background:#f2fdf7; color:#0d7a3e;
+    font-weight:700; font-size:0.85rem; cursor:pointer;
+    text-decoration:none; font-family:inherit;
+    transition:all 0.18s; margin-bottom:10px;
+  }
+  .btn-request-code:hover { background:var(--wa); color:white; border-style:solid; }
+  .btn-request-code svg { width:16px; height:16px; fill:currentColor; }
+
+  .free-note { background:#e6f6ee; border:1px solid #b7e4cb; color:#1e6e45; padding:11px 15px; border-radius:10px; font-size:0.78rem; margin-top:12px; display:flex; gap:8px; align-items:flex-start; }
+  .free-note strong { color:#155a36; }
+
+  .selected-info {
+    background:#f8fafd; border:1px dashed var(--border); border-radius:10px;
+    padding:10px 14px; margin-bottom:16px;
+    display:flex; justify-content:space-between; align-items:center;
+    font-size:0.84rem;
+  }
+  .selected-info .si-name { font-weight:700; color:var(--navy); }
+  .selected-info .si-price { font-weight:800; color:var(--pro); }
+
+  .btn-cancel { display:block; width:100%; padding:10px; border-radius:11px; background:none; border:1px solid var(--border); color:var(--muted); font-weight:600; font-size:0.82rem; cursor:pointer; font-family:inherit; }
+  .btn-cancel:hover { background:#f4f6fa; color:var(--navy); }
+
+  /* ===== STATUS MEMBER ===== */
+  .member-status {
+    display:none; background:linear-gradient(135deg,#fffdf7,#fff8e8);
+    border:2px solid var(--gold); border-radius:18px; padding:24px;
+    max-width:640px; margin:0 auto 30px;
+  }
+  .member-status.show { display:block; }
+  .ms-top { display:flex; align-items:center; justify-content:center; gap:10px; margin-bottom:6px; }
+  .ms-top .ms-icon { font-size:2rem; }
+  .ms-top h4 { font-size:1.15rem; color:var(--navy); }
+  .ms-paket-wrap { text-align:center; margin-bottom:18px; }
+  .ms-paket { display:inline-block; background:linear-gradient(135deg,var(--gold),var(--gold-light)); color:var(--navy); font-weight:800; font-size:0.75rem; padding:3px 14px; border-radius:20px; }
+
+  .countdown-wrap { text-align:center; margin-bottom:16px; }
+  .countdown-label { font-size:0.72rem; color:var(--muted); text-transform:uppercase; letter-spacing:1px; margin-bottom:8px; font-weight:700; }
+  .countdown { display:flex; justify-content:center; gap:8px; }
+  .cd-box { background:linear-gradient(135deg,var(--navy),var(--navy-light)); color:white; border-radius:12px; padding:10px 6px; min-width:62px; flex:0 1 auto; }
+  .cd-box .cd-num { font-size:1.5rem; font-weight:800; line-height:1; font-variant-numeric:tabular-nums; }
+  .cd-box .cd-lbl { font-size:0.6rem; text-transform:uppercase; letter-spacing:0.5px; color:#a9b8cc; margin-top:3px; }
+  .cd-box.seconds .cd-num { color:var(--gold-light); }
+
+  .ms-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:14px; }
+  .ms-cell { background:white; border:1px solid var(--border); border-radius:10px; padding:10px 12px; text-align:center; }
+  .ms-cell .lbl { font-size:0.65rem; color:var(--muted); text-transform:uppercase; letter-spacing:0.5px; }
+  .ms-cell .val { font-size:0.92rem; font-weight:800; color:var(--navy); margin-top:2px; }
+
+  .ms-bar { height:10px; background:#e8edf4; border-radius:20px; overflow:hidden; margin-bottom:10px; }
+  .ms-bar-fill { height:100%; background:linear-gradient(90deg,var(--gold),var(--gold-light)); border-radius:20px; transition:width 1s linear; }
+  .ms-bar-fill.warning { background:linear-gradient(90deg,#e17055,#fab1a0); }
+
+  .ms-note { font-size:0.8rem; color:var(--muted); text-align:center; margin-bottom:14px; }
+  .ms-actions { display:flex; gap:10px; justify-content:center; flex-wrap:wrap; }
+  .ms-actions button { padding:10px 18px; border-radius:9px; border:none; font-weight:700; font-size:0.82rem; cursor:pointer; font-family:inherit; }
+  .ms-actions .renew { background:linear-gradient(135deg,var(--gold),var(--gold-light)); color:var(--navy); }
+  .ms-actions .remove { background:#fef4f3; color:var(--red); border:1px solid #f5c2bf; }
+
+  .expired-card {
+    display:none; background:#fef4f3; border:2px solid #f5c2bf;
+    border-radius:18px; padding:22px; max-width:640px; margin:0 auto 30px; text-align:center;
+  }
+  .expired-card.show { display:block; }
+  .expired-card .ex-icon { font-size:2.2rem; margin-bottom:6px; }
+  .expired-card h4 { color:var(--red); font-size:1.05rem; margin-bottom:4px; }
+  .expired-card p { font-size:0.84rem; color:var(--muted); margin-bottom:14px; }
+  .btn-renew-expired {
+    background:linear-gradient(135deg,var(--gold),var(--gold-light)); color:var(--navy);
+    border:none; padding:11px 22px; border-radius:9px; font-weight:800;
+    font-size:0.85rem; cursor:pointer; font-family:inherit;
+  }
+
+  /* ===== RESPONSIVE ===== */
+  @media (max-width:900px) {
+    .services-grid { grid-template-columns:1fr; }
+    .benefits-grid { grid-template-columns:repeat(2,1fr); }
+    .footer-wrap { grid-template-columns:1fr; }
+    .nav-links { display:none; }
+    .hero h2 { font-size:1.7rem; }
+    .founder-wrap { grid-template-columns:1fr; gap:24px; text-align:center; }
+    .founder-photo, .founder-fallback { max-width:260px; margin:0 auto; }
+    .founder-links { justify-content:center; }
+    .founder-quote { text-align:left; }
+  }
+  @media (max-width:520px) {
+    .benefits-grid { grid-template-columns:1fr; }
+    .plan-option { flex-wrap:wrap; }
+    .cd-box { min-width:52px; }
+    .cd-box .cd-num { font-size:1.2rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ===== TOPBAR ===== -->
+<div class="topbar">
+  <div class="wrap">
+    <span>📞 085731569186 &nbsp;|&nbsp; ✉️ afiransyah63@gmail.com</span>
+    <span>
+      <a href="https://ig.me/m/aal911_" target="_blank" rel="noopener">DM Instagram</a> &nbsp;|&nbsp;
+      <a href="https://wa.me/6285731569186" target="_blank" rel="noopener">WhatsApp</a>
+    </span>
+  </div>
+</div>
+
+<!-- ===== NAVBAR ===== -->
+<nav class="navbar">
+  <div class="wrap">
+    <a class="brand" href="index.html">
+      <div class="brand-logo">AG</div>
+      <div class="brand-text"><h1>Aldi Grup</h1><span>Layanan Digital</span></div>
+    </a>
+    <div style="display:flex; align-items:center; gap:16px;">
+      <div class="nav-links">
+        <a href="index.html">Lobby</a>
+        <a href="layanan.html" class="active">Layanan</a>
+        <a href="https://companycom.github.io/helper.com" target="_blank" rel="noopener">Buat Pengajuan</a>
+      </div>
+      <span class="member-badge" id="memberBadge" onclick="scrollToStatus()">
+        <span class="dot-live"></span>
+        <span id="memberBadgeText">Member Aktif</span>
+      </span>
+    </div>
+  </div>
+</nav>
+
+<!-- ===== HERO ===== -->
+<section class="hero">
+  <div class="wrap">
+    <span class="badge">Layanan Digital Aldi Grup</span>
+    <h2>Ekosistem <span>Karya &amp; Layanan</span> Kami</h2>
+    <p>Dari joki game, marketplace, platform baca novel, hingga portofolio digital. Semua layanan dasar <strong>gratis</strong> diakses.</p>
+  </div>
+</section>
+
+<!-- ===== DAFTAR LAYANAN ===== -->
+<section class="pad">
+  <div class="wrap-narrow">
+
+    <!-- ===== STATUS MEMBER AKTIF ===== -->
+    <div class="member-status" id="memberStatus">
+      <div class="ms-top">
+        <div class="ms-icon">👑</div>
+        <h4>Member Aktif</h4>
+      </div>
+      <div class="ms-paket-wrap">
+        <div class="ms-paket" id="msPaket">Premium Lite</div>
+      </div>
+
+      <div class="countdown-wrap">
+        <div class="countdown-label">⏳ Sisa Waktu Akses</div>
+        <div class="countdown" id="countdown">
+          <div class="cd-box"><div class="cd-num" id="cdHari">0</div><div class="cd-lbl">Hari</div></div>
+          <div class="cd-box"><div class="cd-num" id="cdJam">0</div><div class="cd-lbl">Jam</div></div>
+          <div class="cd-box"><div class="cd-num" id="cdMenit">0</div><div class="cd-lbl">Menit</div></div>
+          <div class="cd-box seconds"><div class="cd-num" id="cdDetik">0</div><div class="cd-lbl">Detik</div></div>
+        </div>
+      </div>
+
+      <div class="ms-grid">
+        <div class="ms-cell"><div class="lbl">Mulai</div><div class="val" id="msMulai">-</div></div>
+        <div class="ms-cell"><div class="lbl">Berakhir</div><div class="val" id="msAkhir">-</div></div>
+      </div>
+
+      <div class="ms-bar"><div class="ms-bar-fill" id="msBar" style="width:100%"></div></div>
+      <div class="ms-note" id="msNote">Potongan otomatis di setiap pesanan.</div>
+
+      <div class="ms-actions">
+        <button class="renew" onclick="openPremium()">🔄 Perpanjang</button>
+        <button class="remove" onclick="hapusMember()">❌ Nonaktifkan</button>
+      </div>
+    </div>
+
+    <!-- ===== PREMIUM HABIS ===== -->
+    <div class="expired-card" id="expiredCard">
+      <div class="ex-icon">🔒</div>
+      <h4>Masa Premium Anda Habis</h4>
+      <p id="expiredText">Akses premium sudah berakhir. Perpanjang untuk menikmati potongan lagi.</p>
+      <button class="btn-renew-expired" onclick="openPremium()">🔄 Perpanjang Sekarang</button>
+    </div>
+
+    <div class="section-title">
+      <h3>4 Layanan Unggulan</h3>
+      <p>Klik kartu untuk mengunjungi layanan secara langsung.</p>
+    </div>
+
+    <div class="services-grid">
+
+      <!-- ===== 1. GitJoki (dengan info DP & fitur) ===== -->
+      <div class="service-card joki">
+        <img src="logo-gitjoki.jpg" alt="Logo GitJoki" class="service-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+        <div class="service-img-fallback" style="display:none;">🎮</div>
+        <div class="service-body">
+          <div class="service-head">
+            <div>
+              <h4>GitJoki</h4>
+              <span class="tag">Jasa Joki Game + Web Dev</span>
+            </div>
+          </div>
+          <p class="desc">
+            Layanan joki game profesional <strong>dan jasa pembuatan website</strong>.
+            Proses cepat, aman, dikerjakan player &amp; developer berpengalaman.
+          </p>
+
+          <div class="service-info-box">
+            <div class="sib-row">
+              <span class="sib-icon">💻</span>
+              <div>
+                <div class="sib-title">Pembuatan Website</div>
+                <div class="sib-desc">DP mulai <strong>Rp 150.000</strong> · sisa dilunasi saat selesai</div>
+              </div>
+            </div>
+            <div class="sib-row">
+              <span class="sib-icon">✨</span>
+              <div>
+                <div class="sib-title">Request Fitur Tambahan</div>
+                <div class="sib-desc">Dikenakan <strong>biaya tambahan</strong> sesuai kompleksitas</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="service-meta">
+            <span>⚡ Proses cepat</span>
+            <span>🔒 Aman &amp; terpercaya</span>
+            <span>🌐 Web ready</span>
+          </div>
+          <a href="https://my-id1.github.io/GitJoki.com" target="_blank" rel="noopener" class="btn-service">Kunjungi GitJoki →</a>
+        </div>
+      </div>
+
+      <!-- ===== 2. A Comes ===== -->
+      <div class="service-card comes">
+        <img src="logo-acomes.jpg" alt="Logo A Comes" class="service-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+        <div class="service-img-fallback" style="display:none;">🛒</div>
+        <div class="service-body">
+          <div class="service-head"><div><h4>A Comes</h4><span class="tag">Marketplace</span></div></div>
+          <p class="desc">Platform belanja &amp; marketplace digital. Temukan produk pilihan dengan harga terbaik dan proses transaksi yang mudah.</p>
+          <div class="service-meta"><span>🛍️ Produk pilihan</span><span>💳 Transaksi mudah</span></div>
+          <a href="https://my-id1.github.io/a-comes.com" target="_blank" rel="noopener" class="btn-service">Kunjungi A Comes →</a>
+        </div>
+      </div>
+
+      <!-- ===== 3. Novazz Studio ===== -->
+      <div class="service-card novazz">
+        <img src="logo-novazz.jpg" alt="Logo Novazz Studio" class="service-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+        <div class="service-img-fallback" style="display:none;">📖</div>
+        <div class="service-body">
+          <div class="service-head"><div><h4>Novazz Studio</h4><span class="tag">Karya Kolaborasi</span></div></div>
+          <p class="desc">Platform digital untuk menyimpan dan menikmati koleksi novel favorit. Kolaborasi kreatif Aldi Grup × Novazz Studio.</p>
+          <div class="service-meta"><span>📚 Koleksi novel</span><span>🌗 Mode gelap</span><span>🎵 Musik</span></div>
+          <a href="https://linkmeoffice.github.io/novazz.com" target="_blank" rel="noopener" class="btn-service">Kunjungi Novazz Studio →</a>
+        </div>
+      </div>
+
+      <!-- ===== 4. Portofolio ===== -->
+      <div class="service-card porto">
+        <img src="porto.jpg" alt="Portofolio" class="service-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+        <div class="service-img-fallback" style="display:none;">💼</div>
+        <div class="service-body">
+          <div class="service-head"><div><h4>Portofolio</h4><span class="tag">Personal Works</span></div></div>
+          <p class="desc">Kumpulan karya kreatif Mochammad Aldi Dwi Firansyah (Aaltools) — pengembang website &amp; desainer digital minimalis modern.</p>
+          <div class="service-meta"><span>🎨 Web design</span><span>💻 Software dev</span></div>
+          <a href="https://linkmeoffice.github.io/portofolio.com" target="_blank" rel="noopener" class="btn-service">Lihat Portofolio →</a>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ===== TOMBOL PREMIUM ===== -->
+    <div class="premium-cta">
+      <button class="btn-premium" onclick="openPremium()">⭐ Cek Paket Premium (Opsional)</button>
+      <p>Layanan tetap gratis — premium cuma bonus hemat, tidak wajib.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ===== SECTION FOUNDER ===== -->
+<section class="pad founder-section">
+  <div class="wrap-narrow">
+    <div class="founder-wrap">
+      <div>
+        <img src="founder.jpg" alt="Founder Aldi Grup" class="founder-photo" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+        <div class="founder-fallback" style="display:none;">A</div>
+      </div>
+      <div class="founder-info">
+        <span class="badge-sm">Founder Aldi Grup</span>
+        <h3>Mochammad Aldi Dwi Firansyah</h3>
+        <p class="role">Aaltools · Software Development &amp; Design Site Digital</p>
+        <div class="founder-quote">"Keindahan terletak pada kesederhanaan — setiap struktur dibangun dengan teratur."</div>
+        <p>Pengembang website dan desainer digital dengan pendekatan minimalis modern. Membangun ekosistem layanan digital Aldi Grup: GitJoki, A Comes, Novazz Studio, dan portofolio pribadi.</p>
+        <div class="founder-links">
+          <a href="https://linkmeoffice.github.io/portofolio.com" target="_blank" rel="noopener">💼 Lihat Portofolio</a>
+          <a href="https://wa.me/6285731569186" target="_blank" rel="noopener" class="outline">📱 WhatsApp</a>
+          <a href="mailto:afiransyah63@gmail.com" class="outline">✉️ Email</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== KEUNGGULAN ===== -->
+<section class="pad benefits">
+  <div class="wrap-narrow">
+    <div class="section-title">
+      <h3>Mengapa Memilih Kami</h3>
+      <p>Komitmen Aldi Grup dalam menghadirkan layanan digital berkualitas.</p>
+    </div>
+    <div class="benefits-grid">
+      <div class="benefit"><div class="num">4</div><h5>Layanan Aktif</h5><p>Terus bertambah</p></div>
+      <div class="benefit"><div class="num">100%</div><h5>Digital</h5><p>Akses online</p></div>
+      <div class="benefit"><div class="num">∞</div><h5>Kreativitas</h5><p>Tanpa batas</p></div>
+      <div class="benefit"><div class="num">24/7</div><h5>Akses</h5><p>Kapan saja</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== CTA ===== -->
+<section style="padding:0 24px 64px;">
+  <div class="wrap-narrow">
+    <div class="cta-box">
+      <div>
+        <h3>Tertarik Bekerja Sama?</h3>
+        <p>Hubungi admin Aldi Grup untuk kolaborasi atau pertanyaan seputar layanan.</p>
+      </div>
+      <a href="https://companycom.github.io/helper.com" target="_blank" rel="noopener" class="btn-gold">📝 Buat Pengajuan →</a>
+    </div>
+  </div>
+</section>
+
+<!-- ===== FOOTER ===== -->
+<footer>
+  <div class="footer-wrap">
+    <div class="footer-brand">
+      <h4>Aldi Grup</h4>
+      <p>Ekosistem layanan digital: joki game, marketplace, platform novel, dan portofolio kreatif. Dikelola dengan profesional.</p>
+    </div>
+    <div class="footer-col">
+      <h5>Layanan</h5>
+      <a href="https://my-id1.github.io/GitJoki.com" target="_blank" rel="noopener">GitJoki</a>
+      <a href="https://my-id1.github.io/a-comes.com" target="_blank" rel="noopener">A Comes</a>
+      <a href="https://linkmeoffice.github.io/novazz.com" target="_blank" rel="noopener">Novazz Studio</a>
+      <a href="https://linkmeoffice.github.io/portofolio.com" target="_blank" rel="noopener">Portofolio</a>
+    </div>
+    <div class="footer-col">
+      <h5>Kontak</h5>
+      <a href="https://wa.me/6285731569186" target="_blank" rel="noopener">085731569186</a>
+      <a href="mailto:afiransyah63@gmail.com">afiransyah63@gmail.com</a>
+      <a href="https://ig.me/m/aal911_" target="_blank" rel="noopener">@aal911_</a>
+    </div>
+  </div>
+  <div class="footer-bottom">© 2026 Aldi Grup — Layanan Digital. Semua hak dilindungi.</div>
+</footer>
+
+<!-- ===================================================================
+     MODAL PREMIUM — 3 TAHAP
+=================================================================== -->
+<div class="modal-overlay" id="premiumModal">
+  <div class="modal-box">
+    <div class="modal-head">
+      <div>
+        <h4 id="mTitle">Paket Premium</h4>
+        <div class="sub" id="mSub">Pilih paket yang Anda inginkan</div>
+      </div>
+      <button class="modal-close" onclick="closePremium()" aria-label="Tutup">✕</button>
+    </div>
+
+    <div class="modal-body">
+
+      <!-- STEP INDICATOR -->
+      <div class="step-indicator" id="stepIndicator">
+        <div class="step-dot active" id="step1"><span class="num">1</span></div>
+        <div class="step-line"></div>
+        <div class="step-dot" id="step2"><span class="num">2</span></div>
+        <div class="step-line"></div>
+        <div class="step-dot" id="step3"><span class="num">3</span></div>
+      </div>
+
+      <!-- ===== TAHAP 1: PILIH PAKET ===== -->
+      <div class="stage show" id="stagePaket">
+
+        <div class="premium-benefits">
+          <div class="pb-title">📌 Berlaku di:</div>
+          <ul>
+            <li><span class="chk">✓</span> <span>GitJoki</span></li>
+            <li><span class="chk">✓</span> <span>Development Website</span></li>
+            <li><span class="chk">✓</span> <span>Prioritas Premium</span></li>
+          </ul>
+        </div>
+
+        <button class="plan-option lite" onclick="pilihPaket('lite')">
+          <div class="po-icon">🥉</div>
+          <div class="po-body">
+            <h5>Lite Member</h5>
+            <p>Potongan Rp 3.000 / pesanan · 168 jam (7 hari)</p>
+          </div>
+          <div class="po-price"><div class="p">Rp 15.000</div><div class="m">168 jam</div></div>
+        </button>
+
+        <button class="plan-option pro" onclick="pilihPaket('pro')">
+          <div class="po-icon">🥇</div>
+          <div class="po-body">
+            <h5>Pro Member <span class="lbl">Paling Untung</span></h5>
+            <p>Potongan Rp 6.000 / pesanan · 600 jam (25 hari)</p>
+          </div>
+          <div class="po-price"><div class="p">Rp 30.000</div><div class="m">600 jam</div></div>
+        </button>
+
+        <div class="free-note">
+          ✅ <div><strong>Layanan tetap gratis.</strong> Premium hanya opsional untuk potongan harga otomatis.</div>
+        </div>
+
+        <button class="btn-cancel" style="margin-top:10px;" onclick="closePremium()">Nanti saja — tetap gratis</button>
+      </div>
+
+      <!-- ===== TAHAP 2: SCAN BAYAR ===== -->
+      <div class="stage" id="stageBayar">
+        <button class="btn-back" onclick="backToPaket()">← Ganti paket</button>
+
+        <div class="selected-info">
+          <span class="si-name" id="siNamaBayar">Premium Lite</span>
+          <span class="si-price" id="siHargaBayar">Rp 15.000</span>
+        </div>
+
+        <div class="bill-box">
+          <div class="bill-row"><span>Paket</span><span id="billPaket">-</span></div>
+          <div class="bill-row"><span>Durasi</span><span id="billMasa">-</span></div>
+          <div class="bill-row total"><span>Total Bayar</span><span id="billTotal">-</span></div>
+        </div>
+
+        <div class="scan-caption"><span class="dot"></span>Scan untuk membayar...</div>
+
+        <div class="scan-area">
+          <div class="scan-line"></div>
+          <div class="scan-corner tl"></div>
+          <div class="scan-corner tr"></div>
+          <div class="scan-corner bl"></div>
+          <div class="scan-corner br"></div>
+          <img src="scan.jpg" alt="QR Pembayaran" class="scan-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+          <div class="scan-fallback">
+            <div class="qr-emoji">📷</div>
+            <span>QR Pembayaran<br>(scan.jpg belum tersedia)</span>
+          </div>
+        </div>
+
+        <div class="pay-steps-info">
+          <strong>📋 Cara aktivasi:</strong><br>
+          1. Scan QR di atas &amp; bayar<br>
+          2. Klik tombol "Konfirmasi &amp; Minta Kode"<br>
+          3. Admin kirim kode via WhatsApp<br>
+          4. Masukkan kode untuk aktivasi
+        </div>
+
+        <a href="#" target="_blank" rel="noopener" class="btn-confirm-code" id="btnConfirmCode">
+          <svg viewBox="0 0 24 24"><path d="M17.5 14.4c-.3-.1-1.7-.8-1.9-.9-.3-.1-.5-.1-.7.1-.2.3-.7.9-.9 1.1-.2.2-.3.2-.6.1-.3-.1-1.2-.5-2.3-1.5-.9-.8-1.4-1.7-1.6-2-.2-.3 0-.4.1-.6.1-.1.3-.3.4-.5.1-.2.2-.3.3-.5.1-.2 0-.4 0-.5s-.7-1.6-.9-2.2c-.2-.6-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4-.3.3-1 1-1 2.5s1.1 2.9 1.2 3.1c.2.2 2.1 3.2 5.1 4.5.7.3 1.3.5 1.7.6.7.2 1.4.2 1.9.1.6-.1 1.7-.7 1.9-1.4.2-.7.2-1.3.2-1.4-.1-.1-.3-.2-.6-.4M12 2C6.5 2 2 6.5 2 12c0 1.8.5 3.5 1.3 4.9L2 22l5.2-1.4c1.4.8 3 1.2 4.8 1.2 5.5 0 10-4.5 10-10S17.5 2 12 2"/></svg>
+          Konfirmasi &amp; Minta Kode
+        </a>
+
+        <button class="btn-verify" onclick="lanjutKeKode()" style="background:linear-gradient(135deg,var(--gold),var(--gold-light)); color:var(--navy);">
+          📝 Sudah Minta Kode? Masukkan Sekarang →
+        </button>
+
+        <button class="btn-cancel" onclick="closePremium()">Batalkan</button>
+      </div>
+
+      <!-- ===== TAHAP 3: MASUKKAN KODE AKTIVASI ===== -->
+      <div class="stage" id="stageKode">
+        <button class="btn-back" onclick="backToBayar()">← Kembali ke pembayaran</button>
+
+        <div class="selected-info">
+          <span class="si-name" id="siNamaKode">Premium Lite</span>
+          <span class="si-price" id="siHargaKode">Rp 15.000</span>
+        </div>
+
+        <div class="code-intro">
+          <div class="lock-icon">🔐</div>
+          <h5>Masukkan Kode Aktivasi</h5>
+          <p>Kode dikirim admin via WhatsApp setelah pembayaran terverifikasi.</p>
+        </div>
+
+        <div class="code-field">
+          <label>Kode Aktivasi Premium</label>
+          <input type="text" id="inputKode" placeholder="Masukkan kode dari admin" autocomplete="off" spellcheck="false" maxlength="20">
+        </div>
+
+        <div class="code-msg" id="codeMsg"></div>
+
+        <button class="btn-verify" onclick="verifikasiKode()">🔓 Aktifkan Sekarang</button>
+
+        <a href="#" target="_blank" rel="noopener" class="btn-request-code" id="btnRequestCode">
+          <svg viewBox="0 0 24 24"><path d="M17.5 14.4c-.3-.1-1.7-.8-1.9-.9-.3-.1-.5-.1-.7.1-.2.3-.7.9-.9 1.1-.2.2-.3.2-.6.1-.3-.1-1.2-.5-2.3-1.5-.9-.8-1.4-1.7-1.6-2-.2-.3 0-.4.1-.6.1-.1.3-.3.4-.5.1-.2.2-.3.3-.5.1-.2 0-.4 0-.5s-.7-1.6-.9-2.2c-.2-.6-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4-.3.3-1 1-1 2.5s1.1 2.9 1.2 3.1c.2.2 2.1 3.2 5.1 4.5.7.3 1.3.5 1.7.6.7.2 1.4.2 1.9.1.6-.1 1.7-.7 1.9-1.4.2-.7.2-1.3.2-1.4-.1-.1-.3-.2-.6-.4M12 2C6.5 2 2 6.5 2 12c0 1.8.5 3.5 1.3 4.9L2 22l5.2-1.4c1.4.8 3 1.2 4.8 1.2 5.5 0 10-4.5 10-10S17.5 2 12 2"/></svg>
+          Belum dapat kode? Chat Admin
+        </a>
+
+        <div class="free-note">
+          ✅ <div>Layanan dasar tetap <strong>gratis</strong> tanpa kode. Kode hanya untuk premium.</div>
+        </div>
+
+        <button class="btn-cancel" style="margin-top:10px;" onclick="closePremium()">Tutup</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+  // ===================================================================
+  // KONFIGURASI
+  // ===================================================================
+  const KODE_MIN_TENGAH = 3;
+  const KODE_MAX_TENGAH = 12;
+  const WA_ADMIN = '6285731569186';   // 085731569186
+
+  const PAKET = {
+    lite: { nama: 'Premium Lite', hargaStr: 'Rp 15.000', jam: 168, potongan: 3000, masaLabel: '168 jam (7 hari)' },
+    pro:  { nama: 'Premium Pro',  hargaStr: 'Rp 30.000', jam: 600, potongan: 6000, masaLabel: '600 jam (25 hari)' }
+  };
+
+  const STORAGE_KEY = 'aldigrup_member';
+  const MS_PER_JAM = 1000 * 60 * 60;
+  const MS_PER_MENIT = 1000 * 60;
+  const MS_PER_DETIK = 1000;
+
+  // ===================================================================
+  // UTIL WAKTU
+  // ===================================================================
+  function formatTanggal(d) { return d.toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric' }); }
+  function formatJam(d) { return d.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }); }
+  function formatTanggalJam(d) { return formatTanggal(d) + ' ' + formatJam(d); }
+
+  // ===================================================================
+  // STORAGE
+  // ===================================================================
+  function simpanMember(data) { try { localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); } catch (e) { console.error(e); } }
+  function ambilMember() { try { const raw = localStorage.getItem(STORAGE_KEY); return raw ? JSON.parse(raw) : null; } catch (e) { return null; } }
+  function hapusMemberStorage() { localStorage.removeItem(STORAGE_KEY); }
+
+  // ===================================================================
+  // STATE
+  // ===================================================================
+  let memberData = null;
+  let timerCountdown = null;
+  let paketDipilih = null;
+
+  // ===================================================================
+  // CEK STATUS + COUNTDOWN
+  // ===================================================================
+  function cekStatusMember() {
+    const data = ambilMember();
+    const statusEl = document.getElementById('memberStatus');
+    const expiredEl = document.getElementById('expiredCard');
+    const badge = document.getElementById('memberBadge');
+
+    if (!data) {
+      statusEl.classList.remove('show'); expiredEl.classList.remove('show'); badge.classList.remove('show');
+      if (timerCountdown) clearInterval(timerCountdown);
+      return;
+    }
+
+    const skrg = Date.now();
+    const mulai = new Date(data.mulai).getTime();
+    const akhir = new Date(data.akhir).getTime();
+    const sisa = akhir - skrg;
+
+    if (sisa <= 0) {
+      if (!data.expired) { data.expired = true; data.expiredPada = new Date().toISOString(); simpanMember(data); }
+      statusEl.classList.remove('show'); badge.classList.remove('show'); expiredEl.classList.add('show');
+      const p = PAKET[data.paket];
+      document.getElementById('expiredText').textContent =
+        `Paket ${p ? p.nama : data.namaPaket} Anda sudah habis pada ${formatTanggalJam(new Date(akhir))}. Perpanjang untuk menikmati potongan lagi.`;
+      if (timerCountdown) clearInterval(timerCountdown);
+      return;
+    }
+
+    memberData = data;
+    if (data.expired) { data.expired = false; data.expiredPada = null; simpanMember(data); }
+
+    statusEl.classList.add('show'); expiredEl.classList.remove('show'); badge.classList.add('show');
+
+    const p = PAKET[data.paket];
+    if (!p) return;
+
+    document.getElementById('memberBadgeText').textContent = p.nama + ' Aktif';
+    document.getElementById('msPaket').textContent = p.nama;
+    document.getElementById('msMulai').textContent = formatTanggalJam(new Date(mulai));
+    document.getElementById('msAkhir').textContent = formatTanggalJam(new Date(akhir));
+    document.getElementById('msNote').textContent = `Potongan Rp ${p.potongan.toLocaleString('id-ID')} otomatis di setiap pesanan.`;
+
+    updateCountdown(mulai, akhir);
+
+    if (timerCountdown) clearInterval(timerCountdown);
+    timerCountdown = setInterval(() => {
+      const sisaNow = akhir - Date.now();
+      if (sisaNow <= 0) { clearInterval(timerCountdown); cekStatusMember(); }
+      else { updateCountdown(mulai, akhir); }
+    }, 1000);
+  }
+
+  function updateCountdown(mulai, akhir) {
+    const skrg = Date.now();
+    const sisa = Math.max(0, akhir - skrg);
+    const hari  = Math.floor(sisa / (MS_PER_JAM * 24));
+    const jam   = Math.floor((sisa % (MS_PER_JAM * 24)) / MS_PER_JAM);
+    const menit = Math.floor((sisa % MS_PER_JAM) / MS_PER_MENIT);
+    const detik = Math.floor((sisa % MS_PER_MENIT) / MS_PER_DETIK);
+
+    document.getElementById('cdHari').textContent  = String(hari).padStart(2, '0');
+    document.getElementById('cdJam').textContent   = String(jam).padStart(2, '0');
+    document.getElementById('cdMenit').textContent = String(menit).padStart(2, '0');
+    document.getElementById('cdDetik').textContent = String(detik).padStart(2, '0');
+
+    const total = akhir - mulai;
+    const persen = Math.max(0, Math.min(100, (sisa / total) * 100));
+    const bar = document.getElementById('msBar');
+    bar.style.width = persen + '%';
+    bar.classList.toggle('warning', persen < 25);
+  }
+
+  // ===================================================================
+  // STEP INDICATOR
+  // ===================================================================
+  function setStep(n) {
+    const step1 = document.getElementById('step1');
+    const step2 = document.getElementById('step2');
+    const step3 = document.getElementById('step3');
+    [step1, step2, step3].forEach((el, i) => {
+      el.classList.remove('active', 'done');
+      if (i + 1 < n) el.classList.add('done');
+      else if (i + 1 === n) el.classList.add('active');
+    });
+  }
+
+  // ===================================================================
+  // MODAL NAVIGASI
+  // ===================================================================
+  const modal = document.getElementById('premiumModal');
+  const stagePaket = document.getElementById('stagePaket');
+  const stageBayar = document.getElementById('stageBayar');
+  const stageKode = document.getElementById('stageKode');
+  const mTitle = document.getElementById('mTitle');
+  const mSub = document.getElementById('mSub');
+  const inputKode = document.getElementById('inputKode');
+  const codeMsg = document.getElementById('codeMsg');
+
+  function openPremium() {
+    // Selalu mulai dari TAHAP 1
+    stagePaket.classList.add('show');
+    stageBayar.classList.remove('show');
+    stageKode.classList.remove('show');
+    mTitle.textContent = 'Paket Premium';
+    mSub.textContent = 'Pilih paket yang Anda inginkan';
+    paketDipilih = null;
+    inputKode.value = '';
+    inputKode.classList.remove('invalid');
+    codeMsg.className = 'code-msg';
+    codeMsg.textContent = '';
+    setStep(1);
+
+    modal.classList.add('show');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closePremium() {
+    modal.classList.remove('show');
+    document.body.style.overflow = '';
+    paketDipilih = null;
+  }
+
+  function backToPaket() {
+    stageBayar.classList.remove('show');
+    stageKode.classList.remove('show');
+    stagePaket.classList.add('show');
+    mTitle.textContent = 'Paket Premium';
+    mSub.textContent = 'Pilih paket yang Anda inginkan';
+    paketDipilih = null;
+    setStep(1);
+  }
+
+  function backToBayar() {
+    stageKode.classList.remove('show');
+    stageBayar.classList.add('show');
+    mTitle.textContent = 'Pembayaran ' + (PAKET[paketDipilih]?.nama || '');
+    mSub.textContent = 'Scan QR & konfirmasi';
+    setStep(2);
+  }
+
+  // ===================================================================
+  // TAHAP 1 → TAHAP 2 (PILIH PAKET → SCAN BAYAR)
+  // ===================================================================
+  function pilihPaket(kodePaket) {
+    const p = PAKET[kodePaket];
+    if (!p) return;
+
+    paketDipilih = kodePaket;
+
+    // Info di tahap bayar
+    document.getElementById('siNamaBayar').textContent = p.nama;
+    document.getElementById('siHargaBayar').textContent = p.hargaStr;
+    document.getElementById('billPaket').textContent = p.nama;
+    document.getElementById('billMasa').textContent = p.masaLabel;
+    document.getElementById('billTotal').textContent = p.hargaStr;
+
+    // Tombol konfirmasi & minta kode via WA
+    const pesanWA =
+      `Halo Admin Aldi Grup,\n\n` +
+      `Saya sudah melakukan pembayaran premium:\n` +
+      `Paket: ${p.nama}\n` +
+      `Total: ${p.hargaStr}\n` +
+      `Durasi: ${p.masaLabel}\n\n` +
+      `Mohon kirim KODE AKTIVASI untuk paket ini. Terima kasih.`;
+    document.getElementById('btnConfirmCode').href =
+      `https://wa.me/${WA_ADMIN}?text=${encodeURIComponent(pesanWA)}`;
+
+    // Pindah ke tahap 2
+    stagePaket.classList.remove('show');
+    stageBayar.classList.add('show');
+    mTitle.textContent = 'Pembayaran ' + p.nama;
+    mSub.textContent = 'Scan QR & konfirmasi';
+    setStep(2);
+  }
+
+  // ===================================================================
+  // TAHAP 2 → TAHAP 3 (SUDAH DAPAT KODE)
+  // ===================================================================
+  function lanjutKeKode() {
+    if (!paketDipilih) {
+      alert('Pilih paket terlebih dahulu.');
+      backToPaket();
+      return;
+    }
+
+    const p = PAKET[paketDipilih];
+
+    // Info di tahap kode
+    document.getElementById('siNamaKode').textContent = p.nama;
+    document.getElementById('siHargaKode').textContent = p.hargaStr;
+
+    // Tombol minta kode ulang
+    const pesanWA =
+      `Halo Admin Aldi Grup,\n\n` +
+      `Saya sudah melakukan pembayaran ${p.nama} (${p.hargaStr}).\n` +
+      `Mohon kirim KODE AKTIVASI. Terima kasih.`;
+    document.getElementById('btnRequestCode').href =
+      `https://wa.me/${WA_ADMIN}?text=${encodeURIComponent(pesanWA)}`;
+
+    // Pindah ke tahap 3
+    stageBayar.classList.remove('show');
+    stageKode.classList.add('show');
+    mTitle.textContent = 'Aktivasi Premium';
+    mSub.textContent = 'Masukkan kode dari admin';
+    setStep(3);
+    setTimeout(() => inputKode.focus(), 300);
+  }
+
+  // ===================================================================
+  // VALIDASI KODE
+  // ===================================================================
+  function cekFormatKode(kode) {
+    if (!kode.startsWith('A')) return { valid: false, pesan: 'Kode harus diawali huruf "A".' };
+    if (!kode.endsWith('al')) return { valid: false, pesan: 'Kode harus diakhiri "al".' };
+    const tengah = kode.slice(1, -2);
+    if (tengah.length < KODE_MIN_TENGAH) return { valid: false, pesan: `Bagian tengah terlalu pendek (min. ${KODE_MIN_TENGAH} huruf).` };
+    if (tengah.length > KODE_MAX_TENGAH) return { valid: false, pesan: `Bagian tengah terlalu panjang (maks. ${KODE_MAX_TENGAH} huruf).` };
+    if (!/^[a-zA-Z0-9]+$/.test(tengah)) return { valid: false, pesan: 'Bagian tengah hanya boleh huruf & angka.' };
+    return { valid: true, pesan: 'Kode valid!' };
+  }
+
+  function verifikasiKode() {
+    const kode = inputKode.value.trim();
+    inputKode.classList.remove('invalid');
+    codeMsg.className = 'code-msg';
+    codeMsg.textContent = '';
+
+    if (!kode) {
+      inputKode.classList.add('invalid');
+      codeMsg.classList.add('show', 'error');
+      codeMsg.textContent = '❌ Kode tidak boleh kosong. Minta ke admin via WhatsApp jika belum dapat.';
+      return;
+    }
+
+    const hasil = cekFormatKode(kode);
+    if (!hasil.valid) {
+      inputKode.classList.add('invalid');
+      codeMsg.classList.add('show', 'error');
+      codeMsg.textContent = '❌ ' + hasil.pesan;
+      return;
+    }
+
+    codeMsg.classList.add('show', 'success');
+    codeMsg.textContent = '✅ Kode diterima! Mengaktifkan premium...';
+
+    setTimeout(() => { aktivasiMember(kode); }, 800);
+  }
+
+  inputKode.addEventListener('keypress', (e) => { if (e.key === 'Enter') verifikasiKode(); });
+  inputKode.addEventListener('input', () => {
+    inputKode.classList.remove('invalid');
+    codeMsg.className = 'code-msg';
+    codeMsg.textContent = '';
+  });
+
+  // ===================================================================
+  // AKTIVASI MEMBER
+  // ===================================================================
+  function aktivasiMember(kode) {
+    if (!paketDipilih) {
+      alert('Paket tidak ditemukan. Coba ulang.');
+      backToPaket();
+      return;
+    }
+
+    const p = PAKET[paketDipilih];
+    const skrgMs = Date.now();
+    const akhirMs = skrgMs + p.jam * MS_PER_JAM;   // ← hitung JAM
+
+    const data = {
+      paket: paketDipilih,
+      namaPaket: p.nama,
+      potongan: p.potongan,
+      jam: p.jam,
+      mulai: new Date(skrgMs).toISOString(),
+      akhir: new Date(akhirMs).toISOString(),
+      kode: kode,
+      expired: false,
+      expiredPada: null,
+      dibuatPada: new Date(skrgMs).toISOString()
+    };
+
+    simpanMember(data);
+    memberData = data;
+
+    // Konfirmasi ke WA
+    const pesan =
+      `Halo Admin Aldi Grup,\n\n` +
+      `Premium saya sudah aktif.\n` +
+      `Paket: ${p.nama}\n` +
+      `Kode: ${kode}\n` +
+      `Mulai: ${formatTanggalJam(new Date(skrgMs))}\n` +
+      `Berakhir: ${formatTanggalJam(new Date(akhirMs))}\n` +
+      `Total: ${p.hargaStr}\n\n` +
+      `Terima kasih.`;
+    window.open(`https://wa.me/${WA_ADMIN}?text=${encodeURIComponent(pesan)}`, '_blank');
+
+    closePremium();
+    cekStatusMember();
+    setTimeout(() => scrollToStatus(), 400);
+  }
+
+  // ===================================================================
+  // HAPUS MEMBER
+  // ===================================================================
+  function hapusMember() {
+    if (!confirm('Yakin ingin menonaktifkan membership? Data akan dihapus dari perangkat ini.')) return;
+    hapusMemberStorage();
+    memberData = null;
+    if (timerCountdown) clearInterval(timerCountdown);
+    cekStatusMember();
+  }
+
+  function scrollToStatus() {
+    const el = document.getElementById('memberStatus');
+    if (el.classList.contains('show')) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+
+  // ===================================================================
+  // INIT
+  // ===================================================================
+  cekStatusMember();
+  document.addEventListener('visibilitychange', () => { if (!document.hidden) cekStatusMember(); });
+</script>
+
+</body>
+</html>
